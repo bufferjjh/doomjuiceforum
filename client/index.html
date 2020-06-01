@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<head>
+  <title>DOOMJUICE Forum</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/nolan/64/edit--v1.png"/>
+  <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">
+  <script defer src="/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<style>
+
+::placeholder {
+  color: #09db28;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+ color: #09db28;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+ color: #09db28;
+}
+
+body {
+  background-color: rgba(0,0,0,0.7);
+  background-image: linear-gradient(90deg,#a8c0ff, #3f2b96);
+  font-family: 'Baloo Chettan 2', cursive;
+}
+.initial_pop_up {
+  position: absolute;
+  background-color: white;
+  height: 380px;
+  width: 380px;
+  border-radius: 10px;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+.pop_up_logo {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85.33px;
+  height: 85.33px;
+}
+.pop_up_header {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: blue;
+}
+.username_getter {
+  position: absolute;
+  top: 210px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: transparent;
+  outline: none;
+  outline-style: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid blue;
+  width: 200px;
+  text-align: center;
+  padding: 5px;
+  color: purple;
+  font-family: 'Baloo Chettan 2', cursive;
+  font-size: 20px;
+  transition: 0.2s;
+}
+.username_getter:hover {
+  width: 250px;
+}
+.submitButton {
+  position: absolute;
+  top: 270px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 40px;
+  border-radius: 10px;
+  font-family: 'Baloo Chettan 2', cursive;
+  font-size: 20px;
+  background-color: transparent;
+  outline: none;
+  color: blue;
+  border-color: blue;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.submitButton:hover {
+  background-color: blue;
+}
+
+#usersOnline {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 315px;
+}
+
+#joinAlert {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 30px;
+  background-color: white;
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 5px;
+  animation-name: slideIn;
+  animation-play-state: paused;
+  animation-duration: 0.3s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+@keyframes slideIn {
+  0%   {height: 30px;}
+  25%  {height: 20px;}
+  50%  {height: 10px;}
+  100% {height: 0px;}
+}
+#messanging-box {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  height: 100px;
+  visibility: hidden;
+}
+#main-type {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 35px;
+  width: 100%
+}
+#typing-box {
+  position: absolute;
+  top: 18px;
+  left: 10px;
+  width: 500px;
+  height: 35px;
+  border: 1.5px solid #09db28;
+  border-radius: 5px;
+  outline: none;
+  padding-left: 8px;
+  color: #09db28;
+  font-weight: bold;
+}
+#send-button {
+  position: absolute;
+  top: 18px;
+  height: 40px;
+  width: 150px;
+  background-color: transparent;
+  border-radius: 5px;
+  border: 2px solid #09db28;
+  left: 1000px;
+  margin-right: 10px;
+  outline: none;
+  cursor: pointer;
+  color: #09db28;
+  transition: 0.2s;
+}
+
+#send-button:hover {
+  background-color:#09db28;
+}
+
+.userMessage {
+  display: block;
+  position: relative;
+  width: 60%;
+  background-color: white;
+  border-radius: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding: 5px;
+}
+#messanging-area {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  overflow-y: scroll;
+}
+#attachment-image {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+}
+</style>
+<body onresize="adjustElements();">
+
+<div class="initial_pop_up">
+  <img class="pop_up_logo" src="https://img.icons8.com/nolan/64/edit--v1.png"/>
+  <center><strong><p class="pop_up_header">DOOMJUICE<br>Forum</p></strong></center>
+  <input class="username_getter" placeholder="Username" type="text"/>
+  <input class="submitButton" type="button" value="Join Forum" onclick="registerUser();"/>
+  <p id="usersOnline"><strong><a style="color:green; font-size: 25px;">•</a> <a id="userCounter">0</a></strong> Users Online</p>
+</div>
+
+
+
+<div id="messanging-box">
+  <div id= "main-type">
+    <input id="typing-box" type="text" placeholder="hi"/>
+    <input id="send-button" type="button" value="Send" onclick="sendMessage()"/>
+  </div>
+</div>
+
+<script>
+
+</script>
+</body>
+
+</html>
